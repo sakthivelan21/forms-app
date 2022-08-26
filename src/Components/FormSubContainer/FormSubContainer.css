@@ -1,0 +1,18 @@
+.form-sub-container{
+    width:100%;
+    border-radius:10px;
+    background:var(--primary-form-bg-color);
+    min-height: 100px;
+    padding: 10px 20px;
+    margin: 30px auto;
+}
+
+.required{
+    color: var(--primary-form-required-color);
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.form-sub-container-heading{
+    font-weight: 600;
+}

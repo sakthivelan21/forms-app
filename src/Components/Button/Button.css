@@ -1,0 +1,21 @@
+.button
+{
+	cursor: pointer;
+    border-radius: 10px;
+    background: var(--primary-button-bg-color);
+    color: var(--primary-font-color);
+    font-size: 1.05rem;
+    font-weight: bold;
+    letter-spacing: .1rem;
+    transition:transform ease-in 0.2s;
+    padding: 10px;
+    border: 1.5px solid var(--primary-button-border-color);
+    display:block;
+    margin:10px auto;
+}
+
+.button:hover{
+    transform:scale(1.1);
+    background-color: var(--primary-button-hov-bg-color);
+  }
+  
