@@ -1,21 +1,33 @@
 .button
 {
 	cursor: pointer;
-    border-radius: 10px;
-    background: var(--primary-button-bg-color);
-    color: var(--primary-font-color);
-    font-size: 1.05rem;
+    border-radius: 5px;
+    background: var(--primary-dark-pink);
+    color: var(--primary-white);
+    font-size: 1.1rem;
     font-weight: bold;
-    letter-spacing: .1rem;
     transition:transform ease-in 0.2s;
-    padding: 10px;
-    border: 1.5px solid var(--primary-button-border-color);
-    display:block;
-    margin:10px auto;
+    padding: 10px 15px;
+    border: 1.5px solid var(--primary-dark-pink);
 }
 
 .button:hover{
     transform:scale(1.1);
-    background-color: var(--primary-button-hov-bg-color);
-  }
-  
+    opacity: 0.8;
+}
+
+.clear-button{
+    border: unset;
+    outline: none;
+    color: var(--primary-dark-pink);
+    font-size: 1.2rem;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: transparent;
+    transition:transform ease-in 0.2s;
+}
+
+.clear-button:hover{
+    transform:scale(1.1);
+    opacity: 0.8;
+}
