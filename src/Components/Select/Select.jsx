@@ -1,9 +1,9 @@
 import React from 'react'
 import './Select.css';
 
-function Select({selectOptions,name,onChange}){
+function Select({selectOptions,name,onChange,selectRef}){
     return(
-        <select name={name} className='form-select' onChange={onChange}>
+        <select name={name} className='form-select' ref={selectRef} onChange={onChange}>
             <option className='form-options' value="">please choose an option</option>
             {
                 selectOptions.map((optionVal,index)=>

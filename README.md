@@ -8,7 +8,7 @@
 ### Application User Interface - Mobile view 
 
 <p align="center">
-  <img  src="https://github.com/sakthivelan21/bookmarks-app/blob/main/screenshots/forms-app-mobile-view.png?raw=true" width="400" height="650" alt="demo-mobile-image"/>
+  <img  src="https://github.com/sakthivelan21/forms-app/blob/main/screenshots/forms-app-mobile-view.png?raw=true" width="400" height="650" alt="demo-mobile-image"/>
 </p>
 
 ## Steps to start the Application (Frontend)

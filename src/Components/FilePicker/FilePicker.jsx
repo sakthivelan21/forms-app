@@ -1,7 +1,7 @@
 import React from 'react'
 import './FilePicker.css'
 
-function FilePicker({name,updateUserImage,userImageUrl,acceptType}){
+function FilePicker({name,updateUserImage,userImageUrl,acceptType,filePickerRef}){
 
     
     return(
@@ -13,6 +13,7 @@ function FilePicker({name,updateUserImage,userImageUrl,acceptType}){
             <input type="file"  
                 onChange={updateUserImage} 
                 className="input-file" 
+                ref={filePickerRef}
                 name={name} 
                 accept={acceptType} />
         </div>

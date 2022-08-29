@@ -11,7 +11,7 @@ import "./Form.css";
 
 const reducerFunction=(state,action)=>{
 	if(action.subName)
-         return {...state,[action.name]:{...state[action.name],[action.subName]:!state[action.name][action.subName]}}
+         return {...state,[action.name]:{...state[action.name],[action.subName]:action.value}}
     return{...state,[action.name]:action.value}
 }
 
@@ -51,7 +51,7 @@ const initialValueValidation={
 
 const reducerFunctionValidation=(state,action)=>{
 	if(action.subName)
-         return {...state,[action.name]:{...state[action.name],[action.subName]:state[action.name][action.subName]}}
+         return {...state,[action.name]:{...state[action.name],[action.subName]:action.value}}
     return{...state,[action.name]:action.value}
 }
 
@@ -69,51 +69,64 @@ function Form(){
     // validation support state
     const [invalidObject,setInvalidObject]=useReducer(reducerFunctionValidation,initialValueValidation);
     const [initialValueObject,setInitialValueObject]=useReducer(reducerFunctionValidation,initialValueValidation);
-    const refObject={
-        name:useRef(null),
-        mailId:useRef(null),
-        //qualification:useRef(null), 
-        dateOfBirth:useRef(null), 
-        //maritalStatus:useRef(null), 
-        age:useRef(null), 
-        //laptopOwnStatus:useRef(null), 
-        //preferredFavouriteTravel:useRef(null),
-        //userImage:useRef(null)
-    }
+    const refObject=useRef({});
 
     const {name,mailId,dateOfBirth,maritalStatus,age,laptopOwnStatus,preferredFavouriteTravel} = formData;
 
     const updateFormData=useCallback((event)=>{
-        console.log(event.target.name+" "+event.target.value)
+        // console.log(event.target.name+" "+event.target.value)
+        if(event.target.value==='')
+            setInvalidObject({name:event.target.name,value:true});
+        else
+            setInvalidObject({name:event.target.name,value:false});
 		dispatchFunction({'name':event.target.name,'value':event.target.value});
 	},[])
 
     const updateCheckBox=useCallback((event)=>{
-        dispatchFunction({'name':'preferredFavouriteTravel','subName':event.target.name})
-    },[]);
+        dispatchFunction({'name':'preferredFavouriteTravel','subName':event.target.name,value:!preferredFavouriteTravel[event.target.name]})
+    },[preferredFavouriteTravel]);
 
     const updateUserImage=useCallback((event)=>{
 		dispatchFunction({'name':event.target.name,'value':event.target.files[0]});
 		setUserImageUrl(URL.createObjectURL(event.target.files[0]));
 	},[])
 
+    const clearFormFunction=()=>{
+        for (const [key, value] of Object.entries(initialValue)) 
+        {
+            if(key==='preferredFavouriteTravel')
+            {
+                for(let secondKey in value)
+                {
+                    dispatchFunction({'name':key,subName:secondKey,value:value[secondKey]});
+                    setInitialValueObject({'name':key,subName:secondKey,value:initialValueValidation[key][secondKey]});
+                }
+                setInvalidObject({name:key,})
+            }
+            else{
+                dispatchFunction({'name':key,'value':value})
+                setInvalidObject({name:key,value:initialValueValidation[value]});
+            }
+        }
+
+        setUserImageUrl('');
+
+    }
+
     const submitHandler=(event)=>{
 		event.preventDefault();
         console.log(formData);
     }
     
+    
 
     const handleMouseEvent=useCallback((event)=>{
-        
-        // console.log(name==='');
-        // console.log(!isInitial);
-        // console.log(!inputRef.current.contains(event.target))
-        for(let key in refObject)
-            if(!refObject[key].current.contains(event.target) && initialValueObject[key] && formData[key]==='')
+        for(let key in refObject.current)
+            if(!refObject.current[key].contains(event.target) && initialValueObject[key] && formData[key]==='')
             {
                 setInvalidObject({name:key,value:true});
             }
-    },[refObject,formData,initialValueObject]);
+    },[formData,initialValueObject,refObject]);
 
     const inputFocusEvent=(name)=>{
         if(!initialValueObject[name])
@@ -140,7 +153,7 @@ function Form(){
                 name='name'
                 value={name}
                 inputFocusEvent={inputFocusEvent}
-                inputRef={refObject.name}
+                inputRef={ref=> refObject.current['name'] = ref}
                 onChange={updateFormData}
                 />
             </FormSubContainer>
@@ -152,7 +165,7 @@ function Form(){
                 name='mailId'
                 value={mailId}
                 inputFocusEvent={inputFocusEvent}
-                inputRef={refObject.mailId}
+                inputRef={ref=> refObject.current['mailId'] = ref}
                 onChange={updateFormData}
                 />
             </FormSubContainer>
@@ -164,7 +177,7 @@ function Form(){
                 name='dateOfBirth'
                 value={dateOfBirth}
                 inputFocusEvent={inputFocusEvent}
-                inputRef={refObject.dateOfBirth}
+                inputRef={ref=> refObject.current['dateOfBirth'] = ref}
                 onChange={updateFormData}
                 />
             </FormSubContainer>
@@ -176,7 +189,7 @@ function Form(){
                 name='age'
                 value={age}
                 inputFocusEvent={inputFocusEvent}
-                inputRef={refObject.age}
+                inputRef={ref=> refObject.current['age'] = ref}
                 onChange={updateFormData}
                 />
             </FormSubContainer>
@@ -229,27 +242,31 @@ function Form(){
                     onChange={updateFormData}
                 />
             </FormSubContainer>
-            <FormSubContainer title="Your Qualification" isRequired={true} invalid={false}>
+            <FormSubContainer title="Your Qualification" isRequired={true} invalid={invalidObject['qualification']}>
                 <Select
                 selectOptions={selectOptions}
                 name="qualification"
                 onChange={updateFormData}
+                selectRef={ref=> refObject.current['qualification'] = ref}
                 />
             </FormSubContainer>
-            <FormSubContainer title="Pick your image" isRequired={true} invalid={false}>
+            <FormSubContainer title="Pick your image" isRequired={true} invalid={invalidObject['userImage']}>
                 <FilePicker
                     userImageUrl={userImageUrl}
                     updateUserImage={updateUserImage}
                     name="userImage"
                     acceptType="image/png, image/jpeg"
+                    filePickerRef={ref=> refObject.current['userImage'] = ref}
 
                 />
             </FormSubContainer>
             <div className='form-submit-container'>
-                <Button  classProp="clear-button">
+                <Button type="button" classProp="clear-button" clickHandler={clearFormFunction}>
                     Clear Form
                 </Button>
-                <Button type="submit" classProp="button">
+                <Button type="submit" disabled={
+                   !( name!=='' && mailId!=='' && dateOfBirth!=='' && maritalStatus!=='' && age!=='' && laptopOwnStatus!=='' && (preferredFavouriteTravel['car']===true || preferredFavouriteTravel['bus']===true || preferredFavouriteTravel['bike']===true || preferredFavouriteTravel['train']===true))
+                } classProp="button">
                     Submit
                 </Button>
             </div>
